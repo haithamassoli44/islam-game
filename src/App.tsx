@@ -90,7 +90,8 @@ export default function App({ cloud }: { cloud?: Cloud }) {
     if (!pending) return;
     const timer = window.setTimeout(async () => {
       syncing.current = true;
-      const batch = pending.pending.slice(0, 100);
+      // ponytail: one action per request keeps retries immutable; add stable batches if throughput matters.
+      const batch = pending.pending.slice(0, 1);
       try {
         const saved = await cloud.apply({ childId: pending.cloudId as Id<'children'>, revision: pending.revision,
           operationId: pending.operationId, actions: batch });
