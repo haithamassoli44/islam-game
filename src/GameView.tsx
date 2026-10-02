@@ -163,7 +163,7 @@ export function GameView({ progress, settings, childId, interact, arrived, pause
     if (!walkable(to.x, to.y, p.location)) to = { ...to, y: 680 };
     scene.current?.go(to.x, to.y, () => interact(id));
   };
-  return <div className="world-frame" aria-label={p.location === 'square' ? 'ساحة البذور' : 'طريق جسر القصب'}>
+  return <div className="world-frame" role="group" aria-label={p.location === 'square' ? 'ساحة البذور' : 'طريق جسر القصب'}>
     <div ref={host} className="canvas-host" aria-hidden="true" />
     {load === 'ready' && targets.map(s => <button key={s.id} className={`hotspot ${s.id.startsWith('clip') ? 'collect' : ''}`}
       style={{ left: `${s.x / 12}%`, top: `${s.y / 8}%` }} aria-label={s.label} onClick={() => hit(s.id)} disabled={paused}>

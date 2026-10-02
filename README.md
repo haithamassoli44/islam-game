@@ -2,7 +2,7 @@
 
 نموذج قابل للعب بالعربية للأطفال من 6 إلى 12 سنة: ساحة البذور، وحلقة البداية، وطريق جسر القصب، وركن حديث السلام، ودفتر الأهل. التنفيذ بـTypeScript وVite وReact وPhaser وConvex.
 
-[افتح اللعبة](https://haithamassoli44.github.io/islam-game/) · [المستودع العام](https://github.com/haithamassoli44/islam-game) · [سجل التنفيذ والاختبار](docs/implementation.md)
+[افتح اللعبة على Vercel](https://islam-game-eight.vercel.app/) · [نسخة GitHub Pages](https://haithamassoli44.github.io/islam-game/) · [المستودع العام](https://github.com/haithamassoli44/islam-game) · [سجل التنفيذ والاختبار](docs/implementation.md)
 
 التسجيلات الصوتية مؤجلة بطلب صاحب المشروع. النموذج الحالي بالقراءة؛ لا يقدّم تعليمًا صوتيًا مستقلًا بعد. لا توجد موسيقى أو تسجيلات لصوت الطفل. الموسم الكامل والعمل دون اتصال مرحلتان بعد تجربة النموذج مع الأطفال.
 
@@ -33,6 +33,10 @@ npx @convex-dev/auth --web-server-url http://localhost:5173
 ```
 
 تُحفظ إعدادات التطوير محليًا. اختبارات الخادم في `convex/game.test.ts` تفحص الملكية وجلسة الأهل والاستئناف والتكرار والتعارض. يستخدم نشر الواجهة GitHub Actions وGitHub Pages؛ متغير المستودع `VITE_CONVEX_URL` يحتوي عنوان نشر الخادم. لا تُنشر تغييرات الخادم تلقائيًا من CI؛ نشره يكون بـ`npm run backend:deploy` من حساب المشروع.
+
+واجهة Vercel منشورة في مشروع `haitham-assolis-projects/islam-game` ومربوطة بالخادم الإنتاجي نفسه. يشغّل `vercel.json` الاختبارات وفحص TypeScript والبناء قبل النشر. يحجب `.vercelignore` ملفات البيئة والملفات المؤقتة والأصول المصدرية الكبيرة، ويُبقي أصول اللعبة المطلوبة. [دليل Vite على Vercel](https://vercel.com/docs/frameworks/frontend/vite).
+
+لإعادة نشر الواجهة من الجهاز المرتبط: `vercel deploy --prod --scope haitham-assolis-projects`. متغير Vercel الإنتاجي `VITE_CONVEX_URL` مضبوط بالفعل. تعذّر الربط التلقائي بـGitHub لأن تكامل Vercel لا يملك صلاحية المستودع؛ النشر الحالي مباشر، وتفعيل النشر عند كل push يحتاج منح التكامل صلاحية المستودع ثم ربطه من إعدادات المشروع.
 
 ## الوثائق والمصدر
 

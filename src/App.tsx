@@ -246,7 +246,7 @@ export default function App({ cloud }: { cloud?: Cloud }) {
       </section>
     </main> : <main className="play-layout">
       <div className="game-column"><div className="mission-bar"><div><span className="mission-label">حكايتك الأولى</span><h1>{p!.location === 'bridge' ? 'لقاء على الطريق' : 'أهلًا بك في رِواق'}</h1></div>
-        <div className="clip-counter" aria-label={`جمعت ${p!.clips.length} من ثلاثة مشابك`}><Icon name="clip" /><span>{p!.clips.length} / ٣</span></div></div>
+        <div className="clip-counter" role="status" aria-label={`جمعت ${p!.clips.length} من ثلاثة مشابك`}><Icon name="clip" /><span>{p!.clips.length} / ٣</span></div></div>
         <GameView childId={child.id} progress={child.progress} settings={child.settings} interact={interact}
           arrived={() => dispatch({ type: 'enter' })} paused={modal !== null} />
         <div className="game-tools"><button className="secondary" onClick={() => setModal('map')}><Icon name="map" />خريطة الرحلة</button>
@@ -311,7 +311,7 @@ function Story({ progress: p, dispatch }: { progress: Progress; dispatch: (actio
       : p.clips.length === 1 ? 'وجدت مشبكًا. بقي مشبكان.' : 'بقي مشبك واحد.'}</p><p className="goal">ابحث عن ثلاثة مشابك خشبية. المس المشبك لتجمعه.</p>
       {p.clips.length === 0 && <p className="small-note">وَريق: نبدأ لقاءنا بالسلام، ونردّ على من يسلّم علينا.</p>}
       {p.hints.clips && <Notice>انظر تحت المقعد، وقرب الأصيص، وبجانب الأوراق.</Notice>}
-      <div className="inventory" aria-label="المشابك المجموعة">{[0, 1, 2].map(id => <span key={id} className={p.clips.includes(id) ? 'found' : ''}><Icon name="clip" size={28} /><small>{p.clips.includes(id) ? 'وجدته' : 'نبحث'}</small></span>)}</div></>;
+      <div className="inventory" role="group" aria-label="المشابك المجموعة">{[0, 1, 2].map(id => <span key={id} className={p.clips.includes(id) ? 'found' : ''}><Icon name="clip" size={28} /><small>{p.clips.includes(id) ? 'وجدته' : 'نبحث'}</small></span>)}</div></>;
     case 'placement': return <><h2>كلها هنا!</h2><p>{p.sign === 'blocked' ? 'لا أستطيع المرور بالعربة. أين نضعها ليقرأها القادمون ويبقى الطريق مفتوحًا؟' : 'بقي أن نختار مكان اللوحة.'}</p><p className="goal">اختر مكانًا للوحة.</p>
       {p.hints.path && <Notice>جرّب المكان بجانب المقعد.</Notice>}
       <div className="choices"><button className="secondary" onClick={() => dispatch({ type: 'place', position: 'blocked' })}>وسط الممر</button>

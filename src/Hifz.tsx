@@ -18,7 +18,7 @@ export function Hifz({ child, dispatch, close }: { child: LocalChild; dispatch: 
     <div className="hifz-intro"><Portrait character="wariq" /><div><h3>حديث السلام</h3>
       <p>سنتدرّب على حديث عن السلام. تستطيع العودة إلى اللعب متى أردت.</p></div></div>
     <Notice>التسجيلات الصوتية ستُضاف لاحقًا. يمكنك الآن التدريب بالقراءة، أو بمساعدة أحد والديك.</Notice>
-    <div className="step-dots" aria-label={`المرحلة ${step + 1} من 6`}>{steps.map((label, i) => <button key={label}
+    <div className="step-dots" role="group" aria-label={`المرحلة ${step + 1} من 6`}>{steps.map((label, i) => <button key={label}
       className={i === step ? 'active' : ''} aria-label={label} aria-current={i === step ? 'step' : undefined}
       onClick={() => { if (i > 0) dispatch({ type: 'practice', step: i }); }} disabled={i === 0}><span>{i + 1}</span></button>)}</div>
     <h3>{steps[step]}</h3>
