@@ -8,7 +8,7 @@ import { GameView } from './GameView';
 import { Hifz } from './Hifz';
 import { Parents, syncText } from './Parents';
 import { Icon, Modal, Portrait, Field, Notice } from './ui';
-import { loadStore, saveStore, newChild, hashLocalPin, exportSave, type LocalChild, type LocalPin, type Store } from './storage';
+import { loadStore, saveStore, newChild, guestChild, hashLocalPin, exportSave, type LocalChild, type LocalPin, type Store } from './storage';
 import { stopAudio } from './audio';
 import type { Cloud } from './cloud';
 
@@ -123,8 +123,18 @@ export default function App({ cloud }: { cloud?: Cloud }) {
     document.addEventListener('visibilitychange', onHidden);
     return () => document.removeEventListener('visibilitychange', onHidden);
   }, []);
-  useEffect(() => { setParentToken(null); setParentUntil(0); setPlaying(false); setSelected(null); }, [owner]);
+  useEffect(() => {
+    setParentToken(null); setParentUntil(0);
+    if (dataRef.current.children.find(c => c.id === selected)?.owner) { setPlaying(false); setSelected(null); }
+  }, [owner]);
 
+  const playGuest = () => {
+    try {
+      const guest = guestChild(dataRef.current.children);
+      if (!commit({ ...dataRef.current, children: [...dataRef.current.children.filter(c => c.id !== guest.id), guest] })) return;
+      setSelected(guest.id); setPlaying(true); setMessage('');
+    } catch (e) { setNotice(e instanceof Error ? e.message : 'تعذّر بدء اللعب. أعد المحاولة.'); }
+  };
   const parentClose = () => {
     setModal(null); setParentToken(null); setParentUntil(0);
     if (cloud?.isAuthenticated) void cloud.lock().catch(() => {});
@@ -232,15 +242,17 @@ export default function App({ cloud }: { cloud?: Cloud }) {
       <div className="welcome-art" style={{ backgroundImage: `url(${art.opening})` }}><div className="welcome-paper"><span className="leaf-stamp"><Icon name="leaf" size={28} /></span>
         <h1>أهلًا بك في حيّنا</h1><p>أصدقاء ينتظرونك، وأشياء صغيرة<br />نصنعها معًا.</p></div><span className="art-caption">ساحة البذور، أول حكاية</span></div>
       <section className="welcome-menu"><h2>{children.length ? 'من يبدأ الحكاية؟' : 'لنصنع أول حكاية'}</h2>
-        {cloud?.isLoading || (cloud?.isAuthenticated && !cloud.home) ? <Notice>نحمّل ملفات الأسرة…</Notice>
-          : children.length ? <div className="profile-grid">{children.map(c => <button className="profile-card" key={c.id} onClick={() => {
+        {(cloud?.isLoading || (cloud?.isAuthenticated && !cloud.home)) && <Notice>نحمّل ملفات الأسرة…</Notice>}
+        {children.length ? <div className="profile-grid">{children.map(c => <button className="profile-card" key={c.id} onClick={() => {
             setSelected(c.id); setPlaying(true); setMessage('');
           }}><Portrait character="nawwar" /><span>{c.name}<small>{c.progress.stage === 'bag' ? 'حكاية جديدة' : 'أكمل الحكاية'}</small></span><Icon name="arrow" /></button>)}</div>
-            : <><p className="intro-copy">اختَر اسمًا مستعارًا لطفلك، ونحفظ له مغامرته.</p><button className="start-button" onClick={needParent}><Icon name="leaf" />أنشئ ملفًا وابدأ</button></>}
-        {children.length > 0 && <button className="text-button" onClick={needParent}>أضف ملف طفل</button>}
+            : <p className="intro-copy">ابدأ مغامرتك مباشرة، وأصدقاؤك ينتظرونك في الساحة.</p>}
+        <button className="start-button" onClick={playGuest}><Icon name="leaf" />العب بدون حساب</button>
+        <p className="small-note">نحفظ تقدمك على هذا الجهاز. لا تحتاج حسابًا أو رمز أهل للعب.</p>
+        <button className="text-button" onClick={needParent}>أضف ملف طفل</button>
         <div className="account-area">{cloud?.isAuthenticated ? <><span className="account-status"><Icon name="check" size={17} />حساب الأسرة متصل</span>
           <button className="text-button" onClick={async () => { parentClose(); await cloud.signOut(); setPlaying(false); setSelected(null); }}>تسجيل الخروج</button></>
-          : <><p>يمكن البدء بملف محلي على هذا الجهاز.</p>{cloud && <button className="secondary" onClick={() => setModal('login')}><Icon name="lock" />دخول / إنشاء حساب الأسرة</button>}</>}
+          : <><p>حساب الأسرة اختياري لحفظ التقدم ومتابعته عبر الأجهزة.</p>{cloud && <button className="secondary" onClick={() => setModal('login')}><Icon name="lock" />دخول / إنشاء حساب الأسرة</button>}</>}
         </div>
         <p className="small-note audio-note"><Icon name="book" size={18} />النسخة الحالية بالقراءة. التسجيلات الصوتية لاحقًا.</p>
       </section>

@@ -4,6 +4,7 @@ import { initialProgress, initialSettings, validProgress, validSettings, validAc
 export type LocalChild = {
   id: string; name: string; settings: Settings; progress: Progress; review: Review;
   owner?: string; cloudId?: string; revision: number;
+  guest?: boolean;
   pending: GameAction[]; operationId: string;
   sync: 'local' | 'pending' | 'saved' | 'error' | 'conflict';
 };
@@ -16,6 +17,13 @@ export function newChild(name: string): LocalChild {
     review: {}, revision: 0, pending: [], operationId: crypto.randomUUID(), sync: 'local' };
 }
 
+export function guestChild(children: LocalChild[]): LocalChild {
+  const guest = children.find(c => c.guest && !c.owner && !c.cloudId);
+  if (guest) return guest;
+  if (children.filter(c => !c.owner).length >= 12) throw new Error('يمكن إنشاء ١٢ ملفًا محليًا. اختر ملفًا موجودًا للعب.');
+  return { ...newChild('ضيف'), guest: true };
+}
+
 export function loadStore(): { data: Store; error: string } {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -24,6 +32,7 @@ export function loadStore(): { data: Store; error: string } {
     if (data.schema !== 1 || !Array.isArray(data.children) || data.children.length > 100
       || new Set(data.children.map(c => c.id)).size !== data.children.length
       || data.children.some(c => !c || typeof c.id !== 'string' || typeof c.name !== 'string'
+        || (c.guest !== undefined && typeof c.guest !== 'boolean')
         || !validProgress(c.progress) || !validSettings(c.settings) || !Array.isArray(c.pending) || c.pending.some(a => !validAction(a))
         || typeof c.operationId !== 'string' || !Number.isInteger(c.revision) || !c.review)) {
       throw new Error('INVALID_SAVE');
