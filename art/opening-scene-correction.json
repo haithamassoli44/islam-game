@@ -1,0 +1,8 @@
+{
+  "mode": "built-in image_gen",
+  "prompt": "Use case: precise-object-edit\nAsset type: opening story scene concept art, single detail correction.\nInput image is the existing four-character Seed Square opening scene, edit target.\nPrimary request: Change ONLY the turquoise stripe pattern on the cream fan-shaped tail of Lamha, the turquoise quadruped near the lower-right middle. Currently two turquoise stripes are visible. Make EXACTLY THREE clearly distinct broad turquoise bands on the cream fan tail, preserving the tail's current shape, size, position and cream tip. Space the three turquoise bands naturally along the tail.\nInvariants: Keep EVERY OTHER pixel/element unchanged as closely as possible: all four characters, their faces, poses, colors, anatomy and accessories; board and notebook remain blank; tree, courtyard, wet stones, basket, clips, pot, flowers, architecture, perspective, light and painterly texture. Do not add anything or restyle. Opaque scenic background remains. No text or labels.",
+  "referenced_image_paths": [
+    "assets/concepts/world/seed-square-opening.png"
+  ],
+  "transparent_background": false
+}

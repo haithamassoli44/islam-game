@@ -1,0 +1,69 @@
+{
+  "generation_mode": "built-in image_gen",
+  "assets": [
+    {
+      "id": "seed-square-background",
+      "output": "assets/concepts/world/seed-square-background.png",
+      "runtime": "public/art/seed-square-background.jpg",
+      "referenced_image_paths": [
+        "assets/concepts/world/seed-square-opening-v2.png"
+      ],
+      "transparent_background": false,
+      "prompt": "Use case: precise-object-edit. Asset type: production background plate for the existing Riwaq children's 2D game, 1536 by 1024 landscape. Input image is the edit target. Preserve the exact cozy hand-painted gouache village, warm stone paving, large leafy central tree, left stone arch gate, right leaf-roof library, bench and flower pots, color palette, perspective, light and texture. Remove all four fantasy characters completely and reconstruct the empty scenery behind them naturally. Also remove the large wooden sign that the central character is holding, the basket of pegs at the lower left, the loose pegs, and the loose leaf pile on the path, because these will become separately interactive runtime objects. Keep the wooden bench and the flowerpot beside it. Keep the central and lower courtyard mostly clear and walkable. No characters, creatures, people, text, lettering, watermark or UI. Keep the image a faithful editable background version of the original, not a redesign."
+    },
+    {
+      "id": "bridge-path",
+      "output": "assets/concepts/world/bridge-path.png",
+      "runtime": "public/art/bridge-path.jpg",
+      "referenced_image_paths": [
+        "assets/concepts/world/seed-square-background.png"
+      ],
+      "transparent_background": false,
+      "prompt": "Use case: illustration-story. Asset type: empty production 2D game background for the short path from Seed Square to Reed Bridge in Riwaq. The input image is a style reference only. Match this established hand-painted gouache storybook village exactly in palette, rich tactile brush texture, warm sunny afternoon, three-quarter fixed view. Landscape 1536x1024. Scene: a clear pale stone and packed-earth footpath stretching across the foreground and curving toward a small reed-and-wood bridge in the upper-left distance, a gently flowing turquoise stream, soft green grassy banks and reeds, wildflowers, a few warm stone village buildings and leafy trees in the distance. The lower 40 percent must be a wide empty walkable path for runtime characters to explore; no large foreground obstacles. This is just the first small scenic section of a journey, no big destination or quest objects. No humans, characters, animals, creatures, writing, labels, signs, UI, borders or watermark. The village from the reference and this path should feel like adjacent locations in the same world."
+    }
+  ],
+  "standing_pose_extraction": [
+    {
+      "character": "nawwar",
+      "source": "assets/concepts/characters/nawwar-sheet-v2.png",
+      "crop": [
+        0,
+        0,
+        395,
+        552
+      ]
+    },
+    {
+      "character": "lamha",
+      "source": "assets/concepts/characters/lamha-sheet-v2.png",
+      "crop": [
+        0,
+        0,
+        355,
+        550
+      ]
+    },
+    {
+      "character": "rukn",
+      "source": "assets/concepts/characters/rukn-sheet.png",
+      "crop": [
+        0,
+        0,
+        450,
+        540
+      ]
+    },
+    {
+      "character": "wariq",
+      "source": "assets/concepts/characters/wariq-sheet-v2.png",
+      "crop": [
+        0,
+        0,
+        396,
+        530
+      ]
+    }
+  ],
+  "extraction_command": "cwebp -q 90 -crop X Y WIDTH HEIGHT -resize 0 384 SOURCE -o assets/runtime/CHARACTER.webp",
+  "background_compression": "sips -s format jpeg -s formatOptions 82 SOURCE --out RUNTIME"
+}

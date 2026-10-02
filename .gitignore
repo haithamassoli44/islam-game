@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.env*
+!.env.example
+.DS_Store
+*.tsbuildinfo
+output/
+coverage/
+tmp/
+.convex/
+.agents/
+.claude/
+skills-lock.json
+convex/_generated/ai/ai-files.state.json

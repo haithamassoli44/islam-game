@@ -1,0 +1,33 @@
+{
+  "name": "riwaq-islam-game",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "test": "vitest run",
+    "check": "npm test && npm run build",
+    "backend:dev": "convex dev",
+    "backend:deploy": "convex deploy"
+  },
+  "dependencies": {
+    "@auth/core": "^0.41.3",
+    "@convex-dev/auth": "^0.0.95",
+    "convex": "^1.45.0",
+    "phaser": "^3.90.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@edge-runtime/vm": "^5.0.0",
+    "@types/node": "^24.19.1",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "convex-test": "^0.0.56",
+    "typescript": "~5.9.3",
+    "vite": "^8.3.2",
+    "vitest": "^5.0.3"
+  }
+}

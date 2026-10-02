@@ -1,0 +1,26 @@
+{
+  "mode": "built-in image_gen",
+  "edits": {
+    "nawwar": {
+      "prompt": "Use case: precise-object-edit\nAsset type: corrected transparent character reference sheet.\nInput image: edit target, the existing Nawwar seven-depiction sheet.\nPrimary request: Correct ONLY the satchel and its strap in the BACK VIEW (the fourth full-body figure across the top, at the upper right). In the front view the bag is on the viewer's right, therefore in the BACK view it must be on the viewer's LEFT, attached to the SAME anatomical left side of the creature. Move the turquoise satchel and diagonal strap to the correct mirrored rear-side placement. Remove the previous bag/strap from its wrong rear position. The circular flap and turquoise appearance remain identical.\nInvariants: Preserve ALL other six character depictions EXACTLY unchanged; preserve this back-view body, feet, three leaf sprouts, apricot dots, colors, silhouette, size and placement. Keep the layout, dimensions, painterly gouache texture and alpha transparency. No background added, no labels, no extra elements.\nTransparent background must remain genuinely transparent.",
+      "referenced_image_paths": [
+        "assets/concepts/characters/nawwar-sheet.png"
+      ],
+      "transparent_background": true
+    },
+    "wariq": {
+      "prompt": "Use case: precise-object-edit\nAsset type: corrected transparent character reference sheet.\nInput image: edit target, the existing Wariq seven-depiction sheet.\nPrimary request: Correct ONLY the cream card pouch and its diagonal strap in the BACK VIEW (the fourth full-body figure across the top, at the upper right). In the front view the pouch is on the viewer's right, therefore in the BACK view it must be on the viewer's LEFT, attached to the SAME anatomical left side. Move the pouch with pastel blank cards and the strap to the correct mirrored rear-side placement. Remove the previous pouch/strap from its wrong rear position. Preserve pouch appearance and card colors.\nInvariants: Preserve ALL other six character depictions EXACTLY unchanged; preserve this back-view body, feet, arms, five cream-tipped crown leaves, sage color, leaf veins, silhouette, size and placement. Keep the layout, dimensions, painterly gouache texture and alpha transparency. No background added, no labels, no extra elements.\nTransparent background must remain genuinely transparent.",
+      "referenced_image_paths": [
+        "assets/concepts/characters/wariq-sheet.png"
+      ],
+      "transparent_background": true
+    },
+    "lamha": {
+      "prompt": "Use case: precise-object-edit\nAsset type: corrected transparent character reference sheet.\nInput image: edit target, the existing Lamha seven-depiction sheet.\nPrimary request: Correct ONLY the color pattern on the cream fan tail in the upper four full-body views. Wherever the tail is visible, show EXACTLY THREE distinct broad turquoise stripes/markings on the cream tail, consistently ordered along its length. If a view currently has two markings, add the missing third naturally within the existing tail silhouette. Preserve the cream fan shape and size; allow natural perspective occlusion but make all three marks clearly countable on the broad visible tails.\nInvariants: Keep the entire rest of the sheet unchanged: all four quadruped bodies, exactly two leaf-shaped ears with one bent, fur, faces, paws, mustard backpacks and magnifiers, poses, positions, all three lower expression portraits, and the gouache rendering. No additional anatomy or characters. Keep dimensions and true alpha background. No labels, text, background or shadow plates.",
+      "referenced_image_paths": [
+        "assets/concepts/characters/lamha-sheet.png"
+      ],
+      "transparent_background": true
+    }
+  }
+}

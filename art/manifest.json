@@ -1,0 +1,83 @@
+{
+  "generation_mode": "built-in image_gen",
+  "selected_asset_count": 6,
+  "status": "concept art",
+  "assets": [
+    {
+      "id": "nawwar",
+      "path": "assets/concepts/characters/nawwar-sheet-v2.png",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "mode": "RGBA",
+      "prompt_file": "art/character-prompts.json",
+      "correction_file": "art/character-corrections.json",
+      "sha256": "90c01c772e91ad2d9e6aacaa8e1f3d98ff4a0a6f19459d6a935698ffe5df536a",
+      "transparent_pixel_percent": 51.18
+    },
+    {
+      "id": "lamha",
+      "path": "assets/concepts/characters/lamha-sheet-v2.png",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "mode": "RGBA",
+      "prompt_file": "art/character-prompts.json",
+      "correction_file": "art/character-corrections.json",
+      "sha256": "b2fcfb3c180436d9f8bd223ef6079ee0c777b1e43cb9c4044cd592e7977ba2b6",
+      "transparent_pixel_percent": 56.21
+    },
+    {
+      "id": "rukn",
+      "path": "assets/concepts/characters/rukn-sheet.png",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "mode": "RGBA",
+      "prompt_file": "art/character-prompts.json",
+      "correction_file": null,
+      "sha256": "ae506de151081b44925a130ad44d1a1cdaaf0f735bcb48609f0d572e711949e6",
+      "transparent_pixel_percent": 41.76
+    },
+    {
+      "id": "wariq",
+      "path": "assets/concepts/characters/wariq-sheet-v2.png",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "mode": "RGBA",
+      "prompt_file": "art/character-prompts.json",
+      "correction_file": "art/character-corrections.json",
+      "sha256": "70d74c1f6fb10e9ca54473907f524b4dc3b7639e8a290b47fe9525ce8011cbe6",
+      "transparent_pixel_percent": 51.91
+    },
+    {
+      "id": "world",
+      "path": "assets/concepts/world/riwaq-world.png",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "mode": "RGB",
+      "prompt_file": "art/world-map-prompt.json",
+      "correction_file": null,
+      "sha256": "ff77f32d92d645d4f7e7604b462ce49a684157879d3c3096bac7d08e98a2ddd6"
+    },
+    {
+      "id": "opening",
+      "path": "assets/concepts/world/seed-square-opening-v2.png",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "mode": "RGB",
+      "prompt_file": "art/opening-scene-prompt.json",
+      "correction_file": "art/opening-scene-correction.json",
+      "sha256": "bbd0741c712473e2abd0ac1638f588161193175946cc4249101f9ce86754f999"
+    }
+  ]
+}
