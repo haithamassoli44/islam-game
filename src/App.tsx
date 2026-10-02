@@ -248,7 +248,7 @@ export default function App({ cloud }: { cloud?: Cloud }) {
       <div className="game-column"><div className="mission-bar"><div><span className="mission-label">حكايتك الأولى</span><h1>{p!.location === 'bridge' ? 'لقاء على الطريق' : 'أهلًا بك في رِواق'}</h1></div>
         <div className="clip-counter" role="status" aria-label={`جمعت ${p!.clips.length} من ثلاثة مشابك`}><Icon name="clip" /><span>{p!.clips.length} / ٣</span></div></div>
         <GameView childId={child.id} progress={child.progress} settings={child.settings} interact={interact}
-          arrived={() => dispatch({ type: 'enter' })} paused={modal !== null} />
+          arrived={() => dispatch({ type: 'enter' })} paused={modal !== null || Boolean(notice)} />
         <div className="game-tools"><button className="secondary" onClick={() => setModal('map')}><Icon name="map" />خريطة الرحلة</button>
           <button className="secondary" onClick={() => setModal('hifz')}><Icon name="book" />ركن الحفظ</button>
           <button className="icon-button" aria-label={child.settings.muted ? 'تشغيل الصوت' : 'كتم الصوت'} onClick={() => { stopAudio(); dispatch({ type: 'preferences', settings: { ...child.settings, muted: !child.settings.muted } }); }}><Icon name={child.settings.muted ? 'mute' : 'sound'} /></button>
@@ -300,7 +300,7 @@ function Story({ progress: p, dispatch }: { progress: Progress; dispatch: (actio
     case 'bag': return <><h2>اختر لون حقيبتك</h2><p>أهلًا بك في رِواق! أصدقاؤنا في الساحة. هل نذهب إليهم؟</p><div className="bag-choices">
       <button className="bag-choice aqua" onClick={() => dispatch({ type: 'bag', color: 'aqua' })}><span className="bag-drawing" />تركواز</button>
       <button className="bag-choice blue" onClick={() => dispatch({ type: 'bag', color: 'blue' })}><span className="bag-drawing" />أزرق</button></div></>;
-    case 'arrival': return <><h2>اذهب إلى أصدقائك في الساحة</h2><p>المس المكان الذي تريد أن تذهب إليه. أو المس صديقًا لتمشي نحوه.</p>
+    case 'arrival': return <><h2>اذهب إلى أصدقائك في الساحة</h2><p>حرّك عصا المشي نحو أصدقائك، واقفز وأنت تمشي. يمكنك أيضًا لمس المكان أو الصديق لتذهب إليه.</p>
       <button onClick={() => dispatch({ type: 'enter' })}>ألتقي بأصدقائي<Icon name="arrow" /></button></>;
     case 'greeting': return <><h2>نبدأ اللقاء</h2><p>{p.hints.greeting ? 'يمكنك أن تسأل بعد التحية. نبدأ بالسلام عليكم ورحمة الله وبركاته. جربها معي.' : 'قبل أن نبدأ الكلام، ماذا نقول عندما نلتقي؟'}</p>
       {p.hints.greeting ? <button onClick={() => dispatch({ type: 'greet', choice: 'salam' })}>أحيّي أصدقائي</button>

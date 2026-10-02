@@ -263,3 +263,38 @@ summary { color: var(--pine); cursor: pointer; padding: 10px 0; min-height: 44px
 }
 @media (prefers-reduced-motion: reduce) { *, *:before, *:after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
 @media (max-width: 480px) { .hotspot span { display: none; } .hotspot { padding: 8px; width: 44px; border-radius: 50%; } }
+.game-controls { direction: ltr; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 18px; margin-top: 17px; padding: 13px 20px 9px; background: var(--paper); border: 1px solid #d5c5a5; border-bottom: 4px solid #d5aa6c; border-radius: 18px; }
+.movement-control { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.movement-joystick { position: relative; width: 112px; height: 112px; min-height: 112px; padding: 0; border: 2px solid #b6c5a8; border-radius: 50%; color: var(--pine); background: #e7edda; box-shadow: inset 0 3px 7px #285a4a12; touch-action: none; user-select: none; -webkit-user-select: none; }
+.movement-joystick:hover { background: #e1e9d3; }
+.movement-joystick:active { transform: none; }
+.joystick-directions { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .65; pointer-events: none; }
+.joystick-knob { position: absolute; left: 50%; top: 50%; width: 44px; height: 44px; border: 2px solid #285a4a; border-radius: 50%; background: var(--teal); box-shadow: 0 3px 0 #285a4a, inset 0 3px 0 #ffffff32; pointer-events: none; }
+.control-label { direction: rtl; color: var(--pine); font-size: 13px; font-weight: 700; }
+.control-instructions { direction: rtl; text-align: center; font-size: 11px; color: #59664f; line-height: 2.1; margin: 0; }
+.control-instructions bdi { white-space: nowrap; color: var(--pine); }
+.action-controls { direction: ltr; display: flex; align-items: center; gap: 10px; }
+.run-control { flex-direction: column; gap: 1px; min-width: 66px; min-height: 64px; padding: 7px 12px; background: #f6eddc; color: var(--pine); border-color: #c9b48e; box-shadow: 0 3px 0 #d9c7a4; font-size: 12px; touch-action: none; user-select: none; -webkit-user-select: none; }
+.run-control:hover { background: #ede2c9; }
+.run-control[aria-pressed="true"] { background: var(--pine); color: var(--paper); border-color: var(--pine); box-shadow: 0 3px 0 #173e32; }
+.jump-control { flex-direction: column; gap: 0; width: 84px; min-height: 84px; padding: 8px; border-radius: 50%; background: var(--teal); border: 2px solid #2b726d; box-shadow: 0 4px 0 #2b726d; font-size: 15px; touch-action: none; user-select: none; -webkit-user-select: none; }
+.jump-control:hover { background: #34847f; }
+@media (max-width: 1100px) and (min-width: 741px), (max-width: 480px) {
+  .game-controls { grid-template-columns: 1fr 1fr; gap: 4px 10px; padding: 12px 15px 8px; }
+  .movement-control { justify-self: start; }
+  .action-controls { justify-self: end; gap: 8px; }
+  .control-instructions { grid-column: 1 / -1; grid-row: 2; font-size: 10px; }
+  .control-instructions br { display: none; }
+}
+@media (max-width: 360px) {
+  .game-controls { padding-inline: 10px; }
+  .movement-joystick { width: 100px; height: 100px; min-height: 100px; }
+  .run-control { min-width: 58px; padding-inline: 8px; }
+  .jump-control { width: 76px; min-height: 76px; }
+}
+@media (orientation: landscape) and (max-height: 560px) {
+  .game-controls { margin-top: 12px; padding-block: 8px 5px; }
+  .movement-joystick { width: 88px; height: 88px; min-height: 88px; }
+  .jump-control { width: 72px; min-height: 72px; }
+  .run-control { min-height: 56px; }
+}

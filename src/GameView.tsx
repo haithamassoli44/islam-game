@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Phaser from 'phaser';
 import { art, aspect, type Character } from './art';
-import { walkable, route, spots, WORLD_WIDTH, WORLD_HEIGHT } from './world';
+import { walkable, route, stepPlayer, spots, WORLD_WIDTH, WORLD_HEIGHT } from './world';
 import type { Progress, Settings } from '../shared/game';
 import { Icon } from './ui';
+import { GameControls } from './GameControls';
 
 const svgTexture = (body: string, width = 100, height = 100) => `data:image/svg+xml;base64,${btoa(
   `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">${body}</svg>`
@@ -16,11 +17,18 @@ class RiwaqScene extends Phaser.Scene {
   ready!: () => void;
   failed!: () => void;
   player!: Phaser.GameObjects.Container;
+  avatar!: Phaser.GameObjects.Container;
   body!: Phaser.GameObjects.Image;
   background!: Phaser.GameObjects.Image;
   props!: Phaser.GameObjects.Group;
   lastLocation = '';
   busy = false;
+  direction = { x: 0, y: 0 };
+  running = false;
+  jumping = false;
+  controlsEnabled = false;
+
+  get reducedMotion() { return this.settings.reducedMotion || matchMedia('(prefers-reduced-motion: reduce)').matches; }
 
   preload() {
     this.load.image('square', `${import.meta.env.BASE_URL}art/seed-square-background.jpg`);
@@ -46,7 +54,8 @@ class RiwaqScene extends Phaser.Scene {
     this.props = this.add.group();
     const shadow = this.add.ellipse(0, -2, 90, 20, 0x423b2b, 0.2);
     this.body = this.add.image(0, 0, 'nawwar', 'standing').setOrigin(.5, 1).setDisplaySize(138, 192);
-    this.player = this.add.container(245, 680, [shadow, this.body]).setDepth(800);
+    this.avatar = this.add.container(0, 0, [this.body]);
+    this.player = this.add.container(245, 680, [shadow, this.avatar]).setDepth(680);
     this.input.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
       if (walkable(pointer.x, pointer.y, this.progress.location)) this.go(pointer.x, pointer.y,
         () => { if (this.progress.stage === 'arrival') this.arrived(); });
@@ -58,9 +67,9 @@ class RiwaqScene extends Phaser.Scene {
     if (!this.player) return;
     const p = this.progress;
     if (this.lastLocation !== p.location) {
-      this.tweens.killAll(); this.busy = false;
+      this.resetControls();
       this.background.setTexture(p.location).setDisplaySize(1200, 800);
-      this.player.setPosition(p.location === 'bridge' ? 330 : 245, 680);
+      this.player.setPosition(p.location === 'bridge' ? 330 : 245, 680).setDepth(680);
       this.lastLocation = p.location;
     }
     this.props.clear(true, true);
@@ -88,30 +97,74 @@ class RiwaqScene extends Phaser.Scene {
         if (p.sign === 'blocked') image(760, 753, 'cart', 100, 100);
       }
     } else friend('lamha', 820, 685, 180);
-    this.player.list.filter(c => c instanceof Phaser.GameObjects.Graphics).forEach(c => c.destroy());
+    this.avatar.list.filter(c => c instanceof Phaser.GameObjects.Graphics).forEach(c => c.destroy());
     if (p.bag === 'blue') {
       const bag = this.add.graphics();
       bag.fillStyle(0x527faa).fillRoundedRect(20, -75, 44, 46, 13);
       bag.lineStyle(2, 0x355c81).strokeRoundedRect(20, -75, 44, 46, 13);
       bag.fillStyle(0x759bc0).fillRoundedRect(22, -73, 40, 22, 10);
       bag.fillStyle(0xe7c274).fillCircle(43, -51, 4);
-      this.player.add(bag);
+      this.avatar.add(bag);
     }
     if (p.flag) {
       const graphics = this.add.graphics({ x: 30, y: -85 });
       graphics.lineStyle(3, 0x594731).lineBetween(0, 20, 0, -25);
       graphics.fillStyle(p.flag === 'aqua' ? 0x3f938e : 0xf2ad64).fillTriangle(0, -25, 29, -16, 0, -4);
-      this.player.add(graphics);
+      this.avatar.add(graphics);
     }
     this.body.clearTint();
+    if (this.reducedMotion) this.land();
+  }
+
+  stopWalking() {
+    if (!this.player) return;
+    this.tweens.killTweensOf(this.player);
+    this.busy = false; this.body.setAngle(0);
+  }
+
+  land() {
+    if (!this.avatar) return;
+    this.tweens.killTweensOf(this.avatar);
+    this.avatar.y = 0; this.jumping = false;
+  }
+
+  resetControls() {
+    this.direction = { x: 0, y: 0 }; this.running = false;
+    this.stopWalking(); this.land();
+  }
+
+  move(x: number, y: number) {
+    if (!this.controlsEnabled) return;
+    this.direction = { x, y };
+    if (x || y) this.stopWalking();
+  }
+
+  jump() {
+    if (!this.controlsEnabled || !this.avatar || this.jumping) return;
+    this.jumping = true;
+    this.tweens.add({ targets: this.avatar, y: this.reducedMotion ? -8 : -58,
+      duration: this.reducedMotion ? 100 : 220, ease: 'Sine.easeOut', yoyo: true,
+      onComplete: () => { this.jumping = false; } });
+  }
+
+  update(_time: number, delta: number) {
+    if (!this.controlsEnabled || !this.player) return;
+    const { x, y } = this.direction;
+    if (!x && !y) { if (!this.busy) this.body.setAngle(0); return; }
+    const next = stepPlayer(this.player, this.direction, (this.running ? 360 : 220) * Math.min(delta, 50) / 1000, this.progress.location);
+    const moved = next.x !== this.player.x || next.y !== this.player.y;
+    this.player.setPosition(next.x, next.y).setDepth(next.y);
+    this.body.setAngle(moved && !this.reducedMotion ? Math.sin(this.time.now / (this.running ? 45 : 65)) * 3 : 0);
+    if (moved && this.progress.stage === 'arrival' && Math.hypot(next.x - spots.friends.x, next.y - spots.friends.y) < 140) this.arrived();
   }
 
   go(x: number, y: number, complete: () => void = () => {}) {
-    if (!this.player || this.busy) return;
+    if (!this.controlsEnabled || !this.player || this.busy || this.direction.x || this.direction.y) return;
+    if (Math.hypot(this.player.x - x, this.player.y - y) < 1) { complete(); return; }
     const path = route(this.player, { x, y }, this.progress.location);
-    if (!path.length) { complete(); return; }
-    if (this.settings.reducedMotion || matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      this.player.setPosition(path.at(-1)!.x, path.at(-1)!.y); complete(); return;
+    if (!path.length) return;
+    if (this.reducedMotion) {
+      this.player.setPosition(path.at(-1)!.x, path.at(-1)!.y).setDepth(path.at(-1)!.y); complete(); return;
     }
     this.busy = true;
     const next = () => {
@@ -145,8 +198,13 @@ export function GameView({ progress, settings, childId, interact, arrived, pause
     return () => { scene.current = null; game.destroy(true); };
   }, [childId, retry]);
   useEffect(() => { const s = scene.current; if (s) { s.progress = progress; s.settings = settings; s.refresh(); } }, [progress, settings]);
-  useEffect(() => { const s = scene.current; if (s?.sys.isActive()) { if (paused) s.scene.pause(); }
-    else if (s?.sys.isPaused() && !paused) s.scene.resume(); }, [paused, load]);
+  useEffect(() => {
+    const s = scene.current;
+    if (!s) return;
+    s.controlsEnabled = !paused && load === 'ready';
+    if (paused) { s.resetControls(); if (s.sys.isActive()) s.scene.pause(); }
+    else if (s.sys.isPaused()) s.scene.resume();
+  }, [paused, load]);
   const p = progress;
   const targets = p.location === 'bridge' ? [{ id: 'lamha', x: 820, y: 505, label: 'لَمْحة' }]
     : [spots.rukn, spots.lamha, spots.wariq, spots.basket, spots.leaves, spots.box].map((s, i) => ({ ...s, id: ['rukn', 'lamha', 'wariq', 'basket', 'leaves', 'box'][i] }))
@@ -163,7 +221,7 @@ export function GameView({ progress, settings, childId, interact, arrived, pause
     if (!walkable(to.x, to.y, p.location)) to = { ...to, y: 680 };
     scene.current?.go(to.x, to.y, () => interact(id));
   };
-  return <div className="world-frame" role="group" aria-label={p.location === 'square' ? 'ساحة البذور' : 'طريق جسر القصب'}>
+  return <><div className="world-frame" role="group" aria-label={p.location === 'square' ? 'ساحة البذور' : 'طريق جسر القصب'}>
     <div ref={host} className="canvas-host" aria-hidden="true" />
     {load === 'ready' && targets.map(s => <button key={s.id} className={`hotspot ${s.id.startsWith('clip') ? 'collect' : ''}`}
       style={{ left: `${s.x / 12}%`, top: `${s.y / 8}%` }} aria-label={s.label} onClick={() => hit(s.id)} disabled={paused}>
@@ -174,5 +232,7 @@ export function GameView({ progress, settings, childId, interact, arrived, pause
       <p>{load === 'loading' ? 'نجهّز ساحة البذور…' : 'تعذّر تحميل الساحة. تحقق من الاتصال ثم أعد المحاولة.'}</p>
       {load === 'error' && <button onClick={() => setRetry(r => r + 1)}>أعد تحميل الساحة</button>}</div>}
     <div className="place-label"><Icon name={p.location === 'square' ? 'home' : 'map'} size={17} />{p.location === 'square' ? 'ساحة البذور' : 'طريق جسر القصب'}</div>
-  </div>;
+  </div><GameControls disabled={paused || load !== 'ready'} resetKey={`${childId}:${p.location}:${retry}`}
+    onMove={(x, y) => scene.current?.move(x, y)} onRun={running => { if (scene.current) scene.current.running = running; }}
+    onJump={() => scene.current?.jump()} onReset={() => scene.current?.resetControls()} /></>;
 }
